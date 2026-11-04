@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#06111f" />
+  <meta name="description" content="We Are The Robots — a cartoon robot arena shooter. Pick a chassis, drop into Cityscape, and fight your way to Venus." />
+  <title>WE ARE THE ROBOTS — Cityscape Arena</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23071422'/%3E%3Crect x='16' y='14' width='32' height='26' rx='12' fill='%2339a7ff' stroke='%234df6ff' stroke-width='2'/%3E%3Ccircle cx='25' cy='26' r='4' fill='%23c9ffff'/%3E%3Ccircle cx='39' cy='26' r='4' fill='%23c9ffff'/%3E%3Crect x='22' y='46' width='20' height='5' rx='2.5' fill='%234df6ff'/%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="/src/style.css" />
+</head>
+<body>
+  <div id="app">
+    <div id="stage"></div>
+    <div id="scanlines"></div>
+    <div id="vignette"></div>
+    <div id="damage-flash"></div>
+    <div id="speed-lines"></div>
+
+    <!-- Boot / load -->
+    <section id="boot" class="screen boot">
+      <div class="boot-inner">
+        <div class="boot-kicker">GAMEVIAL SYSTEMS // ONLINE</div>
+        <div class="boot-logo">WATR<span class="blink">_</span></div>
+        <div class="boot-bar"><span id="boot-progress"></span></div>
+        <div id="boot-status" class="boot-status">INITIALIZING OPTICS...</div>
+        <div class="boot-small">PRESS ANY KEY TO SKIP</div>
+      </div>
+    </section>
+
+    <!-- Main menu -->
+    <section id="menu" class="screen menu hidden">
+      <div class="menu-grid">
+        <div class="menu-copy">
+          <div class="eyebrow"><span class="eyebrow-dot"></span> CITYSCAPE // TRAINING PROTOCOL</div>
+          <h1 class="hero-title">
+            <span class="title-top">WE ARE</span>
+            <span class="title-main">THE ROBOTS</span>
+          </h1>
+          <div class="title-rule"><span></span><b>WATR-2088</b><span></span></div>
+          <p class="menu-blurb">The city is a playground. The robots are armed.<br />Choose a chassis and paint the streets in sparks.</p>
+
+          <div class="chassis-picker" role="radiogroup" aria-label="Choose chassis">
+            <button class="chassis-card selected" data-team="blue" role="radio" aria-checked="true">
+              <div class="chassis-visual">
+                <svg viewBox="0 0 120 130" aria-hidden="true">
+                  <defs>
+                    <linearGradient id="blueBody" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7cbcff"/><stop offset=".45" stop-color="#2478ff"/><stop offset="1" stop-color="#0c2b57"/></linearGradient>
+                    <linearGradient id="blueHead" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#9ed9ff"/><stop offset=".6" stop-color="#2c8bff"/><stop offset="1" stop-color="#0c3c76"/></linearGradient>
+                  </defs>
+                  <ellipse cx="60" cy="118" rx="35" ry="7" fill="#000" opacity=".3"/>
+                  <rect x="30" y="72" width="60" height="42" rx="11" fill="url(#blueBody)" stroke="#071524" stroke-width="3"/>
+                  <rect x="43" y="82" width="34" height="6" rx="3" fill="#0b2035"/>
+                  <circle cx="60" cy="98" r="9" fill="#0e2a45" stroke="#4df6ff" stroke-width="2"/>
+                  <circle cx="60" cy="98" r="4" fill="#4df6ff"/>
+                  <rect x="24" y="75" width="13" height="32" rx="6" fill="#1658ae" stroke="#071524" stroke-width="3"/>
+                  <rect x="83" y="75" width="13" height="32" rx="6" fill="#1658ae" stroke="#071524" stroke-width="3"/>
+                  <rect x="39" y="17" width="42" height="38" rx="19" fill="url(#blueHead)" stroke="#071524" stroke-width="3"/>
+                  <rect x="45" y="29" width="30" height="13" rx="6" fill="#071523"/>
+                  <circle cx="52" cy="36" r="4" fill="#a9feff"><animate attributeName="opacity" values="1;.35;1" dur="2.8s" repeatCount="indefinite"/></circle>
+                  <circle cx="68" cy="36" r="4" fill="#a9feff"><animate attributeName="opacity" values="1;.35;1" dur="2.8s" repeatCount="indefinite"/></circle>
+                  <rect x="53" y="47" width="14" height="3" rx="1.5" fill="#08101c" opacity=".7"/>
+                  <path d="M79 18 L84 3" stroke="#8da3b8" stroke-width="3"/>
+                  <circle cx="85" cy="2" r="3.5" fill="#4df6ff"/>
+                  <rect x="8" y="88" width="47" height="17" rx="5" transform="rotate(-22 8 88)" fill="#aebdcc" stroke="#071524" stroke-width="3"/>
+                  <path d="M45 67 L70 50" stroke="#4df6ff" stroke-width="2" opacity=".6"/>
+                </svg>
+              </div>
+              <div class="chassis-info">
+                <div class="chassis-tag">CHASSIS 01 <span>// AERIAL</span></div>
+                <div class="chassis-name">BLUE UNIT</div>
+                <div class="chassis-desc">Rounded optics. Cool head. Faster reload.</div>
+                <div class="chassis-stats"><span>SPD <b>▓▓▓▓░</b></span><span>ARM <b>▓▓▓░░</b></span></div>
+              </div>
+              <div class="chassis-check">✓</div>
+            </button>
+            <button class="chassis-card" data-team="red" role="radio" aria-checked="false">
+              <div class="chassis-visual">
+                <svg viewBox="0 0 120 130" aria-hidden="true">
+                  <defs>
+                    <linearGradient id="redBody" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff9b7c"/><stop offset=".45" stop-color="#ff3f3c"/><stop offset="1" stop-color="#58151b"/></linearGradient>
+                    <linearGradient id="redHead" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffb078"/><stop offset=".55" stop-color="#ff4b3a"/><stop offset="1" stop-color="#761b1b"/></linearGradient>
+                  </defs>
+                  <ellipse cx="60" cy="118" rx="35" ry="7" fill="#000" opacity=".3"/>
+                  <rect x="28" y="70" width="64" height="44" rx="9" fill="url(#redBody)" stroke="#1f090b" stroke-width="3"/>
+                  <rect x="38" y="80" width="44" height="7" rx="2" fill="#330a0c"/>
+                  <rect x="51" y="94" width="18" height="14" rx="3" fill="#330a0c" stroke="#ffb347" stroke-width="2"/>
+                  <rect x="22" y="73" width="14" height="34" rx="4" fill="#a52226" stroke="#1f090b" stroke-width="3"/>
+                  <rect x="84" y="73" width="14" height="34" rx="4" fill="#a52226" stroke="#1f090b" stroke-width="3"/>
+                  <rect x="37" y="13" width="46" height="42" rx="6" fill="url(#redHead)" stroke="#1f090b" stroke-width="3"/>
+                  <rect x="44" y="26" width="32" height="12" rx="3" fill="#2a0709"/>
+                  <rect x="48" y="30" width="24" height="4" rx="2" fill="#ffd27a"><animate attributeName="opacity" values="1;.45;1" dur="2.1s" repeatCount="indefinite"/></rect>
+                  <rect x="48" y="43" width="24" height="3" rx="1" fill="#330a0c"/>
+                  <rect x="39" y="55" width="9" height="8" fill="#330a0c"/>
+                  <rect x="72" y="55" width="9" height="8" fill="#330a0c"/>
+                  <path d="M59 13 L59 2" stroke="#8da3b8" stroke-width="3"/>
+                  <circle cx="59" cy="2" r="3.5" fill="#ffb347"/>
+                  <path d="M18 56 L39 44" stroke="#ffb347" stroke-width="3"/>
+                  <path d="M102 56 L81 44" stroke="#ffb347" stroke-width="3"/>
+                  <rect x="9" y="89" width="52" height="19" rx="4" transform="rotate(-18 9 89)" fill="#b6c4d2" stroke="#1f090b" stroke-width="3"/>
+                  <path d="M44 68 L65 52" stroke="#ffb347" stroke-width="2" opacity=".6"/>
+                </svg>
+              </div>
+              <div class="chassis-info">
+                <div class="chassis-tag">CHASSIS 02 <span>// HEAVY</span></div>
+                <div class="chassis-name">RED UNIT</div>
+                <div class="chassis-desc">Square jaw. Extra plating. Meaner punch.</div>
+                <div class="chassis-stats"><span>SPD <b>▓▓▓░░</b></span><span>ARM <b>▓▓▓▓░</b></span></div>
+              </div>
+              <div class="chassis-check">✓</div>
+            </button>
+          </div>
+
+          <div class="menu-cta">
+            <button id="deploy-btn" class="btn-primary"><span>DEPLOY TO CITYSCAPE</span><i>→</i></button>
+            <button id="how-btn" class="btn-ghost">HOW TO PLAY</button>
+            <button id="sound-btn" class="btn-icon" aria-label="Toggle sound" title="Toggle sound">◖))</button>
+          </div>
+          <div class="menu-foot">
+            <span>WASD MOVE</span><span>MOUSE AIM</span><span>LMB FIRE</span><span>TAB CHAT</span>
+            <span class="menu-note">SINGLE-PLAYER TRIBUTE // NO DOWNLOADS</span>
+          </div>
+        </div>
+
+        <aside class="menu-side">
+          <div class="side-card">
+            <div class="side-card-head"><span class="status-dot"></span> LIVE ARENA FEED</div>
+            <div class="side-stat"><span>OPERATORS</span><b id="menu-players">08</b></div>
+            <div class="side-stat"><span>SECTOR</span><b>CITYSCAPE</b></div>
+            <div class="side-stat"><span>PROTOCOL</span><b>DEATHMATCH</b></div>
+            <div class="side-stat"><span>WEAPONS</span><b>06</b></div>
+            <div class="side-note">“TELL YOUR FRIENDS. MEET THEM. KILL EACH OTHER.”<br /><em>— ORIGINAL ARENA BRIEF, 2008</em></div>
+          </div>
+          <div class="side-card top-score">
+            <div class="side-card-head"><span class="status-dot warm"></span> LOCAL HIGH SCORE</div>
+            <div class="high-score" id="menu-highscore">000000</div>
+            <div class="high-score-sub" id="menu-highscore-sub">NO RECORD YET</div>
+          </div>
+          <div class="side-card tiny">
+            <div class="side-card-head"><span class="status-dot warm"></span> TRANSMISSION</div>
+            <div class="menu-chat">
+              <p><b>BOLT-9:</b> anyone seen the red unit?</p>
+              <p><b>MAGENTA:</b> he’s behind the crates. he’s always behind the crates.</p>
+              <p><b>RIVET:</b> venus portal is real. don’t let the briefing lie.</p>
+            </div>
+          </div>
+        </aside>
+      </div>
+      <div class="menu-version">BUILD 1.0 // FAN-MADE TRIBUTE TO GAMEVIAL’S “WE ARE THE ROBOTS”</div>
+    </section>
+
+    <!-- HUD -->
+    <section id="hud" class="hud hidden">
+      <div class="hud-top-left">
+        <div class="brand-mini">WATR <span>//</span> <b id="sector-label">CITYSCAPE</b></div>
+        <div class="objective" id="objective">SURVIVE THE FIRST CONTACT</div>
+        <div class="score-row">
+          <div class="stat"><span>SCORE</span><b id="score">000000</b></div>
+          <div class="stat"><span>WAVE</span><b id="wave">01/04</b></div>
+          <div class="stat"><span style="color:#ffd36d">KILLS</span><b id="kills">00</b></div>
+        </div>
+      </div>
+
+      <div class="hud-top-right">
+        <div class="server-pill"><span class="status-dot"></span> LIVE SIM <b id="ping">18ms</b> <em id="bot-count">08 BOTS</em></div>
+        <div class="minimap-wrap">
+          <canvas id="minimap" width="220" height="220"></canvas>
+          <div class="minimap-ring"></div>
+          <div class="minimap-label">RADAR <span>N</span></div>
+        </div>
+        <div id="killfeed" class="killfeed"></div>
+      </div>
+
+      <div id="crosshair" class="crosshair">
+        <i class="ch h"></i><i class="ch v"></i><i class="ch dot"></i>
+        <div id="hitmarker" class="hitmarker"></div>
+      </div>
+
+      <div id="boss-bar" class="boss-bar hidden">
+        <div class="boss-kicker">PRIME UNIT // SECTOR BOSS</div>
+        <div class="boss-name">THE VENUS WARDEN</div>
+        <div class="boss-track"><i id="boss-fill"></i></div>
+      </div>
+
+      <div id="wave-banner" class="wave-banner hidden">
+        <div class="wave-kicker">INCOMING</div>
+        <div class="wave-title">WAVE 01</div>
+        <div class="wave-sub">SHOCKWAVE PATROL</div>
+      </div>
+
+      <div id="medals" class="medals"></div>
+
+      <div class="hud-bottom-left">
+        <div id="chat-log" class="chat-log"></div>
+        <div class="vitals">
+          <div class="player-chip"><span class="chip-mark">▰</span><span id="player-name">BLUE-01</span><em>ONLINE</em></div>
+          <div class="bar-row"><span>HULL</span><div class="bar health"><i id="health-bar"></i></div><b id="health-val">100</b></div>
+          <div class="bar-row"><span>SHIELD</span><div class="bar armor"><i id="armor-bar"></i></div><b id="armor-val">50</b></div>
+        </div>
+      </div>
+
+      <div class="hud-bottom-right">
+        <div id="weapon-slots" class="weapon-slots"></div>
+        <div class="weapon-panel">
+          <div class="weapon-meta"><span id="weapon-type">SIDEARM</span><em id="ammo-reserve">∞</em></div>
+          <div id="weapon-name" class="weapon-name">P-9 SIDEARM</div>
+          <div class="ammo-row"><b id="ammo-mag">12</b><span id="ammo-max">/ 12</span></div>
+          <div class="reload-track"><i id="reload-bar"></i></div>
+          <div class="reload-label" id="reload-label">READY</div>
+        </div>
+      </div>
+
+      <div class="hud-bottom-center">
+        <div class="chat-hint"><kbd>TAB</kbd> CHAT <span>·</span> <kbd>R</kbd> RELOAD <span>·</span> <kbd>SPACE</kbd> JUMP <span>·</span> <kbd>ESC</kbd> PAUSE</div>
+      </div>
+
+      <div id="scope" class="scope hidden">
+        <div class="scope-circle"></div>
+        <div class="scope-cross-h"></div>
+        <div class="scope-cross-v"></div>
+        <div class="scope-ticks"></div>
+        <div class="scope-readout">DRAGUNOV // 5.5× <span>RANGE 180M</span></div>
+      </div>
+
+      <div id="toast" class="toast hidden"></div>
+
+      <div id="chat-entry" class="chat-entry hidden">
+        <div class="chat-entry-top"><span>COMMS // ALL CHANNELS</span><em>ENTER SEND · ESC CLOSE</em></div>
+        <div class="chat-input-row"><span>&gt;</span><input id="chat-input" type="text" maxlength="78" autocomplete="off" spellcheck="false" placeholder="say something to the arena..." /></div>
+      </div>
+
+      <div class="hud-corner tl"></div><div class="hud-corner tr"></div><div class="hud-corner bl"></div><div class="hud-corner br"></div>
+    </section>
+
+    <!-- Touch controls -->
+    <section id="touch-controls" class="touch-controls hidden">
+      <div id="look-zone" class="look-zone"></div>
+      <button id="btn-pause" class="tbtn pause" aria-label="Pause game">II</button>
+      <div id="joystick" class="joystick"><div id="joystick-knob" class="joystick-knob"></div><span>MOVE</span></div>
+      <div class="touch-buttons">
+        <button id="btn-fire" class="tbtn fire" aria-label="Fire">FIRE</button>
+        <button id="btn-jump" class="tbtn jump" aria-label="Jump">JUMP</button>
+        <button id="btn-reload" class="tbtn small" aria-label="Reload">R</button>
+        <button id="btn-swap" class="tbtn small" aria-label="Swap weapon">SWAP</button>
+        <button id="btn-chat" class="tbtn small" aria-label="Chat">CHAT</button>
+      </div>
+    </section>
+
+    <div id="interact" class="interact hidden"><kbd>E</kbd><span>ENTER VENUS PORTAL</span></div>
+
+    <!-- Modals -->
+    <section id="pause" class="screen modal hidden">
+      <div class="modal-card">
+        <div class="modal-kicker">SYSTEM PAUSED</div>
+        <h2 class="modal-title">HOLD POSITION</h2>
+        <div class="pause-stats">
+          <div><span>SCORE</span><b id="pause-score">000000</b></div>
+          <div><span>WAVE</span><b id="pause-wave">01</b></div>
+          <div><span>ACCURACY</span><b id="pause-acc">0%</b></div>
+        </div>
+        <div class="settings-row"><label for="sense">MOUSE SENSITIVITY</label><input id="sense" type="range" min="0.25" max="2.5" step="0.05" value="1" /><output id="sense-val">1.00</output></div>
+        <div class="settings-row"><label for="volume">MASTER VOLUME</label><input id="volume" type="range" min="0" max="1" step="0.02" value="0.72" /><output id="volume-val">72%</output></div>
+        <div class="modal-actions">
+          <button id="resume-btn" class="btn-primary">RESUME <i>→</i></button>
+          <button id="quit-btn" class="btn-ghost">ABANDON RUN</button>
+        </div>
+        <div class="modal-help">WASD move · Mouse aim · LMB fire · R reload · 1-6 weapons · Space jump · Shift sprint · C crouch · Tab chat</div>
+      </div>
+    </section>
+
+    <section id="how" class="screen modal hidden">
+      <div class="modal-card wide">
+        <div class="modal-kicker">FIELD MANUAL // REV 2.0</div>
+        <h2 class="modal-title">HOW TO PLAY</h2>
+        <div class="how-grid">
+          <div><h3>01 // MOVE</h3><p>WASD to strafe. Mouse to steer. Space to jump — press it again in the air to fire your boot thrusters. Shift sprints, C crouches.</p></div>
+          <div><h3>02 // SHOOT</h3><p>Left mouse fires, right mouse aims. Six weapons, six attitudes. R reloads. 1–6 or the scroll wheel swaps hardware.</p></div>
+          <div><h3>03 // SURVIVE</h3><p>Clear four waves in Cityscape. Medkits drop from wrecked robots. When the portal ignites, press E and take the fight to Venus.</p></div>
+          <div><h3>04 // TALK</h3><p>Press TAB to open comms. The other robots have opinions. Enter sends, Esc closes. Their trash talk is part of the experience.</p></div>
+        </div>
+        <div class="how-tip">TIP // Headshots deal double damage. The Dragunov sees through the entire arena. The RPG is also a movement tool, if you are brave and/or stupid.</div>
+        <div class="modal-actions"><button id="how-close" class="btn-primary">BACK TO BASE <i>→</i></button></div>
+      </div>
+    </section>
+
+    <section id="gameover" class="screen modal hidden">
+      <div class="modal-card end-card">
+        <div id="end-kicker" class="modal-kicker danger">SIGNAL LOST</div>
+        <h2 id="end-title" class="modal-title">CHASSIS DESTROYED</h2>
+        <p id="end-blurb" class="end-blurb">The arena claims another operator. Rebuild. Redeploy. Try to be less flammable.</p>
+        <div class="end-stats">
+          <div><span>SCORE</span><b id="end-score">000000</b></div>
+          <div><span>KILLS</span><b id="end-kills">00</b></div>
+          <div><span>ACCURACY</span><b id="end-acc">0%</b></div>
+          <div><span>TIME</span><b id="end-time">00:00</b></div>
+        </div>
+        <div id="end-record" class="end-record hidden">NEW LOCAL HIGH SCORE</div>
+        <div class="modal-actions">
+          <button id="retry-btn" class="btn-primary">REDEPLOY <i>→</i></button>
+          <button id="menu-btn" class="btn-ghost">RETURN TO MENU</button>
+        </div>
+      </div>
+    </section>
+    <div id="fade" class="fade"></div>
+  </div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
